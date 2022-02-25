@@ -26,7 +26,7 @@ plt.title('Petal Width vs Petal Length')
 plt.xlabel(data.feature_names[0])
 plt.ylabel(data.feature_names[1])
 # for i in range(len(data.target_names)):
-for i in range(0,1):
+for i in range(0,3):
     bucket = df[df['Target'] == i]
     bucket = bucket.iloc[:,[0,1]].values
     bucketInput.append(bucket)
@@ -43,8 +43,8 @@ for i in range(0,1):
 plt.legend()
 # print(len(bucketInput[0]))
 bucketInput = bucketInput[0]
-# for elmt in bucketInput:
-#     print(elmt)
+for elmt in bucketInput:
+    print(elmt)
 print("hull point:")
 for elmt in verticesOutput:
   print(elmt)
@@ -85,7 +85,7 @@ def printPosNeg(bucketone, s1, s2, p1, pn):
   for i in range(len(bucketone)):
     det = find_det(p1, pn, bucketone[i])
     status=""
-    if (det>0):
+    if (det>(0)):
       posDet+=1
       status="pos"
       s1.append(bucketone[i])
@@ -97,7 +97,7 @@ def printPosNeg(bucketone, s1, s2, p1, pn):
       zeroDet+=1
       status="zero"
     #   bucketone = np.delete(bucketone,i)
-    # print(det, status)
+    print(bucketone[i], det, status)
     
   # print("posDet:", posDet, "negDet:", negDet, "zeroDet:", zeroDet)
   
@@ -160,7 +160,7 @@ def findPmax(s1p1,s1p2,s1):
     max = findNorm(s1p1,s1p2,s1[0])
     maxIndex = 0
     for x in range(len(s1)):
-        temp = findNorm(s1p1,s1pn,s1[x])
+        temp = findNorm(s1p1,s1p2,s1[x])
         if (temp>max):
             max = temp
             maxIndex = x
@@ -170,13 +170,14 @@ def findPmax(s1p1,s1p2,s1):
 def findPmax2(s1p1,s1p2,s2):
     max = findNorm(s1p1,s1p2,s2[0])
     maxIndex = 0
-    for x in range(len(s1)):
-        temp = findNorm(s1p1,s1pn,s2[x])
+    for x in range(len(s2)):
+        temp = findNorm(s1p1,s1p2,s2[x])
+        print("temp:",temp,s2[x])
         if (temp>max):
             max = temp
             maxIndex = x
     # print("temp: ", temp, maxIndex, max)
-    return s1[maxIndex]
+    return s2[maxIndex]
         
 for x in range(len(s1)):
     print(findNorm(s1p1,s1pn,s1[x]), s1[x])
@@ -211,10 +212,10 @@ def findLeftRightTri2(p1,pn,pmax,s21,s22,s2):
   # s12 terisi elemen bagian kanan dari segitiga
   
   # print("s11:",s11,"\ns12",s12)
-findLeftRightTri(p1,pn,findPmax(s1p1,s1pn,s1),s11,s12,s1)
+# findLeftRightTri(p1,pn,findPmax(s1p1,s1pn,s1),s11,s12,s1)
 curPmax2 = findPmax(s1p1,s1pn,s2) # [4.5 2.3]
 
-findLeftRightTri2(p1,pn,findPmax(s1p1,s1pn,s2),s21,s22,s2)
+# findLeftRightTri2(p1,pn,findPmax(s1p1,s1pn,s2),s21,s22,s2)
 print("s21:")
 printList(s21)
 print("s22:")
@@ -225,11 +226,11 @@ curPmax = findPmax(s1p1,s1pn,s1)
 
 s111 = []
 
-nextPmax = findPmax(s1p1,curPmax,s11)
-nextPmax2 = findPmax(curPmax2,s1pn,s2)
+# nextPmax = findPmax(s1p1,curPmax,s11)
+# nextPmax2 = findPmax(curPmax2,s1pn,s2)
 # nextPmax3 = findPmax(s1pn,curPmax2,s12)
-print("nextPmax1:",nextPmax)
-print("nextPmax2:",nextPmax2)
+# print("nextPmax1:",nextPmax)
+# print("nextPmax2:",nextPmax2)
 # print("nextPmax3:",nextPmax3)
 
 def ifAlready(elmt, list):
@@ -245,7 +246,7 @@ def remove_duplicate(list):
   for elmt in list:
     if not(ifAlready(elmt,new)):
       new.append(elmt)
-      print("append")
+      # print("append")
   return new
 
 def addConvexLeft(sn,chlist,p1,pn):
@@ -263,43 +264,52 @@ def addConvexLeft(sn,chlist,p1,pn):
     findLeftRightTri(p1,pn,pmax,s11,s12,sn)
     s11delpos = []
     s12delpos = []
+    print("s11:")
+    print(s11)
+    print("s12:")
+    print(s12)
+    s21delpos = []
+    s22delpos = []
+    
     if len(s11) != 0:
       for i in range(len(s11)):
         if isInside(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s11[i][0],s11[i][1]):
           print(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s11[i][0],s11[i][1])
           s11delpos.append(i)
     # print("delete pos",i)
-    # if (len(s11delpos)!=0):
-    #   print("s11delpos:")
-    #   printList(s11delpos)
-    #   print("s11")
-    #   printList(s11)
+    if (len(s11delpos)!=0):
+      print("s11delpos:")
+      printList(s11delpos)
+      print("s11")
+      printList(s11)
       
-    #   for i in range(len(s11delpos)):
-    #     s11.pop(s11delpos[len(s11delpos)-i-1])
-    #     print("deleted")
-    #   printList(s11)
+      for i in range(len(s11delpos)):
+        s11.pop(s11delpos[len(s11delpos)-i-1])
+        print("deleted")
+      printList(s11)
     
-    # if len(s12) != 0:
-    #   for i in range(len(s12)):
-    #     if isInside(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s12[i][0],s12[i][1]):
-    #       print(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s12[i][0],s12[i][1])
-    #       s12delpos.append(i)
-    #       # s12 = np.delete(s12,i)
-    #       # print("delete")
-    # if (len(s12delpos)!=0):
-    #   print("s12delpos:")
-    #   printList(s12delpos)
-    #   print("s12")
-    #   print(len(s12))
-    #   for i in range(len(s12delpos)):
-    #     s12.pop(s12delpos[len(s12delpos)-i-1])
-    #     print("deleted")
-    #   print(len(s12))
+    if len(s12) != 0:
+      for i in range(len(s12)):
+        if isInside(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s12[i][0],s12[i][1]):
+          print(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s12[i][0],s12[i][1])
+          s12delpos.append(i)
+          # s12 = np.delete(s12,i)
+          # print("delete")
+    if (len(s12delpos)!=0):
+      print("s12delpos:")
+      printList(s12delpos)
+      print("s12")
+      print(len(s12))
+      for i in range(len(s12delpos)):
+        s12.pop(s12delpos[len(s12delpos)-i-1])
+        print("deleted")
+      print(len(s12))
     
     
     addConvexLeft(s11,chlist,p1,pmax)
     addConvexLeft(s12,chlist,pmax,pn)
+  print("chlist kiri")
+  printList(remove_duplicate(chlist))
     
     # if len(s11) != 0:
     #   print("pmax:",s11)
@@ -323,16 +333,57 @@ def addConvexRight(sn,chlist,p1,pn):
     # if ifAlready(p1,chlist):
       chlist.append(pn)
   else:
-    pmax = findPmax(p1,pn,sn)
+    pmax = findPmax2(p1,pn,sn)
     print("pmax2:",pmax)
         
     findLeftRightTri2(p1,pn,pmax,s21,s22,sn)
-    s11delpos = []
-    s12delpos = []
+    print("s21:")
+    print(s21)
+    print("s22:")
+    print(s22)
+    s21delpos = []
+    s22delpos = []
+    
+    if len(s21) != 0:
+      for i in range(len(s21)):
+        if isInside(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s21[i][0],s21[i][1]):
+          print(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s21[i][0],s21[i][1])
+          s21delpos.append(i)
+    # print("delete pos",i)
+    if (len(s21delpos)!=0):
+      # print("s211delpos:")
+      # printList(s21delpos)
+      # print("s21")
+      # printList(s21)
+      
+      for i in range(len(s21delpos)):
+        s21.pop(s21delpos[len(s21delpos)-i-1])
+        print("deleted")
+      printList(s21)
+    
+    if len(s22) != 0:
+      for i in range(len(s22)):
+        if isInside(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s22[i][0],s22[i][1]):
+          print(p1[0],p1[1],pn[0],pn[1],pmax[0],pmax[1],s22[i][0],s22[i][1])
+          s22delpos.append(i)
+          # s12 = np.delete(s12,i)
+          # print("delete")
+    if (len(s22delpos)!=0):
+      # print("s12delpos:")
+      # printList(s22delpos)
+      # print("s22")
+      # print(len(s22))
+      for i in range(len(s22delpos)):
+        s22.pop(s22delpos[len(s22delpos)-i-1])
+        print("deleted",)
+      print(len(s22))
     
     
-    addConvexRight(s21,chlist,pmax,p1)
+    addConvexRight(s21,chlist,p1,pmax)
     addConvexRight(s22,chlist,pmax,pn)
+  print("chlist kanan")
+  printList(remove_duplicate(chlist))
+  
   
 
 def findConvex(bucketInput):
@@ -382,7 +433,7 @@ print("end")
 # y = 2.9
 # print(isInside(x1,y1,x2,y2,x3,y3,x,y))
 ############################################
-printList(verticesOutput)
+# printList(verticesOutput)
 print("====")
 printList(outputList)
 xl = []
