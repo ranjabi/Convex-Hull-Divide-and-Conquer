@@ -2,9 +2,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from cgi import print_environ
-from hashlib import sha224
-from traceback import print_exception
 from convexHull import *
 from sklearn import datasets
 
@@ -14,7 +11,7 @@ data = datasets.load_iris()
 df = pd.DataFrame(data.data, columns=data.feature_names)
 df['Target'] = pd.DataFrame(data.target)
 print(df.shape)
-df.head()
+print(df.head())
 
 bucketInput = []
 
